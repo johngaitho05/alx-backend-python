@@ -12,14 +12,13 @@ def safely_get_value(dct, key, default = None):
         return default
 """
 
-from typing import TypeVar, Dict, Any, Union
+from typing import TypeVar, Any, Mapping, Optional
 
-K = TypeVar('K')
-V = TypeVar('V')
+T = TypeVar('T')
 
 
-def safely_get_value(dct: Dict[K, V], key: Any,
-                     default: Union[V, None] = None) -> Union[V, Any]:
+def safely_get_value(dct: Mapping, key: Any, default: Optional[T]) \
+        -> Optional[T]:
     """Returns the value of key if it exists in the dict else the
     default value"""
     if key in dct:
