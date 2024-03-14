@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Use mypy to validate the following piece of code and apply any necessary changes.
+Use mypy to validate the following piece of code and apply
+any necessary changes.
 
 def zoom_array(lst: Tuple, factor: int = 2) -> Tuple:
     zoomed_in: Tuple = [
