@@ -12,7 +12,7 @@ def safely_get_value(dct, key, default = None):
         return default
 """
 
-from typing import TypeVar, Dict, Optional, Any, Union
+from typing import TypeVar, Dict, Any, Union
 
 K = TypeVar('K')
 V = TypeVar('V')
