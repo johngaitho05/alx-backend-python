@@ -4,6 +4,6 @@ and/or floats and returns the sum"""
 from typing import List
 
 
-def sum_mixed_list(mxd_lst: List[float | int]) -> float:
+def sum_mixed_list(mxd_lst: List[int | float]) -> float:
     """Returns sum of mxd_list"""
     return sum(mxd_lst)
