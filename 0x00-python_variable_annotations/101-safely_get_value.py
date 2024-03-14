@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Given the parameters and the return values, add type annotations to the function
+Given the parameters and the return values, add type annotations
+to the function
 
 Hint: look into TypeVar
 
