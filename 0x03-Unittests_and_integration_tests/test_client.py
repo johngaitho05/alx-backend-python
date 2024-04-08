@@ -75,7 +75,8 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.return_value = known_payload
 
             # Set the return value of the mock _public_repos_url
-            mock_repos_url.return_value = "https://api.github.com/orgs/example_org/repos"
+            mock_repos_url.return_value = \
+                "https://api.github.com/orgs/example_org/repos"
 
             # Create a GithubOrgClient instance
             client = GithubOrgClient("example_org")
