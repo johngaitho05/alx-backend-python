@@ -35,31 +35,33 @@ class TestGithubOrgClient(unittest.TestCase):
         # Assert that the result matches the expected result
         self.assertEqual(result, expected_result)
 
-    def test_public_repos_url(self):
-        """Test _public_repos_url method of GithubOrgClient"""
-        # Define a known payload for the org method
-        known_payload = {
-            "repos_url": "https://api.github.com/orgs/example_org/repos"
-        }
+    @parameterized.expand([
+        ('random_url', {'repos_url': 'http://some_url.com'})
+    ])
+    def test_public_repos_url(self, name, result):
+        """
+        self descriptive
+        """
+        with patch('client.GithubOrgClient.org',
+                   PropertyMock(return_value=result)):
+            response = GithubOrgClient(name)._public_repos_url
+            self.assertEqual(response, result.get('repos_url'))
 
-        # Patch the org method to return the known payload
-        with patch.object(GithubOrgClient, 'org') as mock_org:
-            # Set the return value of the mock to the known payload
-            mock_org.return_value = known_payload
-
-            # Create a GithubOrgClient instance
-            client = GithubOrgClient("example_org")
-
-            # Call the _public_repos_url method
-            result = client._public_repos_url
-
-            # Assert that the result matches the expected repos_url
-            # from the known payload
-            self.assertEqual(result, known_payload["repos_url"])
+    @parameterized.expand([
+        ('random_url', {'repos_url': 'http://some_url.com'})
+    ])
+    def test_public_repos_url(self, name, result):
+        """
+        Test public repos url method
+        """
+        with patch('client.GithubOrgClient.org',
+                   PropertyMock(return_value=result)):
+            response = GithubOrgClient(name)._public_repos_url
+            self.assertEqual(response, result.get('repos_url'))
 
     @patch('client.get_json')
     def test_public_repos(self, mocked_method):
-        '''self descriptive'''
+        """Test public repos method of GithubOrgClient"""
         payload = [{"name": "Google"}, {"name": "TT"}]
         mocked_method.return_value = payload
 
