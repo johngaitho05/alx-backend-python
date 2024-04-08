@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Test cases for client module"""
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch, MagicMock
 
 from parameterized import parameterized
+
 from client import GithubOrgClient
 
 
@@ -42,8 +43,10 @@ class TestGithubOrgClient(unittest.TestCase):
         }
 
         # Patch the org method to return the known payload
-        with patch.object(GithubOrgClient, 'org',
-                          return_value=known_payload):
+        with patch.object(GithubOrgClient, 'org') as mock_org:
+            # Set the return value of the mock to the known payload
+            mock_org.return_value = known_payload
+
             # Create a GithubOrgClient instance
             client = GithubOrgClient("example_org")
 
