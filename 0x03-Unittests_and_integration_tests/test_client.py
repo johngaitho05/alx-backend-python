@@ -60,9 +60,7 @@ class TestGithubOrgClient(unittest.TestCase):
     class TestGithubOrgClient(unittest.TestCase):
         """Test cases for GithubOrgClient"""
 
-        @patch('github_org_client.get_json')
-        @patch.object(GithubOrgClient, '_public_repos_url')
-        def test_public_repos(self, mock_repos_url, mock_get_json):
+        def test_public_repos(self):
             """Test public_repos method of GithubOrgClient"""
             # Define a known payload for the mocked get_json
             known_payload = [
@@ -71,27 +69,32 @@ class TestGithubOrgClient(unittest.TestCase):
                 {"name": "repo3"}  # No license key in this repo
             ]
 
-            # Set the return value of the mock get_json
-            mock_get_json.return_value = known_payload
+            # Define a known URL for _public_repos_url
+            known_url = "https://api.github.com/orgs/example_org/repos"
 
-            # Set the return value of the mock _public_repos_url
-            mock_repos_url.return_value = \
-                "https://api.github.com/orgs/example_org/repos"
+            # Patch get_json as a context manager
+            with (patch('github_org_client.get_json') as mock_get_json):
+                # Set the return value of the mock get_json
+                mock_get_json.return_value = known_payload
 
-            # Create a GithubOrgClient instance
-            client = GithubOrgClient("example_org")
+                # Patch _public_repos_url as a context manager
+                with patch.object(GithubOrgClient, '_public_repos_url'
+                                  ) as mock_repos_url:
+                    # Set the return value of the mock _public_repos_url
+                    mock_repos_url.return_value = known_url
 
-            # Call the public_repos method
-            result = client.public_repos(license="MIT")
+                    # Create a GithubOrgClient instance
+                    client = GithubOrgClient("example_org")
 
-            # Assert that get_json was called once with the correct argument
-            mock_get_json.assert_called_once_with(
-                "https://api.github.com/orgs/example_org/repos")
+                    # Call the public_repos method
+                    result = client.public_repos(license="MIT")
 
-            # Assert that _public_repos_url was called once
-            mock_repos_url.assert_called_once()
+                    # Assert that get_json was called once with the
+                    # correct argument
+                    mock_get_json.assert_called_once_with(known_url)
 
-            # Assert the result
+                    # Assert the result
+                    self.assertEqual(result, ["repo1"])
 
 
 if __name__ == '__main__':
