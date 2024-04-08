@@ -57,44 +57,41 @@ class TestGithubOrgClient(unittest.TestCase):
             # from the known payload
             self.assertEqual(result, known_payload["repos_url"])
 
-    class TestGithubOrgClient(unittest.TestCase):
-        """Test cases for GithubOrgClient"""
+    def test_public_repos(self):
+        """Test public_repos method of GithubOrgClient"""
+        # Define a known payload for the mocked get_json
+        known_payload = [
+            {"name": "repo1", "license": {"key": "MIT"}},
+            {"name": "repo2", "license": {"key": "GPL-3.0"}},
+            {"name": "repo3"}  # No license key in this repo
+        ]
 
-        def test_public_repos(self):
-            """Test public_repos method of GithubOrgClient"""
-            # Define a known payload for the mocked get_json
-            known_payload = [
-                {"name": "repo1", "license": {"key": "MIT"}},
-                {"name": "repo2", "license": {"key": "GPL-3.0"}},
-                {"name": "repo3"}  # No license key in this repo
-            ]
+        # Define a known URL for _public_repos_url
+        known_url = "https://api.github.com/orgs/example_org/repos"
 
-            # Define a known URL for _public_repos_url
-            known_url = "https://api.github.com/orgs/example_org/repos"
+        # Patch get_json as a context manager
+        with (patch('client.get_json') as mock_get_json):
+            # Set the return value of the mock get_json
+            mock_get_json.return_value = known_payload
 
-            # Patch get_json as a context manager
-            with (patch('github_org_client.get_json') as mock_get_json):
-                # Set the return value of the mock get_json
-                mock_get_json.return_value = known_payload
+            # Patch _public_repos_url as a context manager
+            with patch.object(GithubOrgClient, '_public_repos_url'
+                              ) as mock_repos_url:
+                # Set the return value of the mock _public_repos_url
+                mock_repos_url.return_value = known_url
 
-                # Patch _public_repos_url as a context manager
-                with patch.object(GithubOrgClient, '_public_repos_url'
-                                  ) as mock_repos_url:
-                    # Set the return value of the mock _public_repos_url
-                    mock_repos_url.return_value = known_url
+                # Create a GithubOrgClient instance
+                client = GithubOrgClient("example_org")
 
-                    # Create a GithubOrgClient instance
-                    client = GithubOrgClient("example_org")
+                # Call the public_repos method
+                result = client.public_repos(license="MIT")
 
-                    # Call the public_repos method
-                    result = client.public_repos(license="MIT")
+                # Assert that get_json was called once with the
+                # correct argument
+                mock_get_json.assert_called_once_with(known_url)
 
-                    # Assert that get_json was called once with the
-                    # correct argument
-                    mock_get_json.assert_called_once_with(known_url)
-
-                    # Assert the result
-                    self.assertEqual(result, ["repo1"])
+                # Assert the result
+                self.assertEqual(result, ["repo1"])
 
 
 if __name__ == '__main__':
